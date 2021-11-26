@@ -1,0 +1,1332 @@
+openapi: 3.0.3
+info:
+  title: eswin-extranet API
+  description: EWW WIP eswin-extranet API
+  version: 0.0.1
+servers:
+- url: https://eswin-extranet.staging7.novaway.net/api
+tags:
+- name: "test"
+- name: "my user"
+- name: "my clinic"
+- name: "my clinic member"
+- name: "my patient"
+- name: "my patient record"
+- name: "my report"
+- name: "clinic"
+- name: "practitioner"
+- name: "tearcheck"
+- name: "patient"
+
+paths:
+  /my_tc_users:
+    summary: "Send users created on offline tearcheck, retrieve their cloud id and password fdsf sdf sdf sdf "
+    post:
+      tags:
+      - "my user"
+      summary: "Send users created on offline tearcheck, retrieve their cloud id and password"
+      operationId: "sendNewUser"
+      requestBody:
+        description: "Tearcheck local users. The cloud should create non-existent users with the provided data, if the user already exist no change are made. No password is send since newly created users shall configure their passwords when they activate their accounts via email, if the account is already activated the cloud password is keeped."
+        content:
+          'application/json':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MyTCUserPostInput'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the users informations that the tearcheck shall update as well as the old id of the users on the tearcheck. Password related field shall be empty if the account is not yet activated."
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCUserPostOutput'
+        400:
+          description: "Invalid Users"
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_users:
+    get:
+      tags:
+      - "my user"
+      summary: "Retrieve users authorized in at least one the clinic authorized on this Tearcheck. If a user only have a pending authorization only the id field is send for this user."
+      operationId: "getUsers"
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyUserSmall'
+
+  /my_user:
+    get:
+      tags:
+      - "my user"
+      summary: "Restrieve loged-in user."
+      operationId: "getUser"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyUser'
+    put:
+      tags:
+      - "my user"
+      summary: "Update loged-in user"
+      operationId: "updateUser"
+      requestBody:
+        description: "user updated info"
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/MyUser'
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content: {}
+        400:
+          description: Error
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_clinics:
+    get:
+      tags:
+      - "my clinic"
+      summary: "Restrieve clinics authorized on this Tearcheck."
+      operationId: "getClinics"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyClinic'
+
+  /my_clinics/patients:
+    post:
+      tags:
+      - "my clinic"
+      summary: "Note: For payload reason this request is a POST instead of a GET. Retrieves the patients who authorized at least one of the clinics set in parameters."
+      operationId: "getClinicsPatients"
+      requestBody:
+        description: "Patient ids."
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                type: integer
+            example: [42, 43, 44]
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyPatient'
+      x-codegen-request-body-name: body
+
+  /my_tc_clinic_member:
+    post:
+      tags:
+      - "my clinic member"
+      summary: "Send clinic member created on offline tearcheck, retrieve there cloud id."
+      operationId: "sendNewClinicMember"
+      requestBody:
+        description: "Tearcheck local clinic member. The cloud should create non-existent member with the provided data. If the member already exist nothing is done."
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TCClinicMemberPostInput'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the clinic members informations that the tearcheck shall update as well as the old id of the clinic members on the tearcheck."
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TCClinicMemberPostOutput'
+        400:
+          description: "Invalid Users."
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_clinic_members:
+    get:
+      tags:
+      - "my clinic member"
+      summary: "Retrieve clinic member authorized in at least one the clinic authorized on this Tearcheck. If a clinic member only have a pending authorization only the id field is send for this user."
+      operationId: getClinicMembers
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyClinicMember'
+
+  /my_clinic_member:
+    put:
+      tags:
+      - "my clinic member"
+      summary: "Update clinic member. Loged in user must be authorized to perform the modification"
+      operationId: "updateClinicMember"
+      requestBody:
+        description: "user updated info"
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/MyClinicMemberUpdate'
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content: {}
+        400:
+          description: Error
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_tc_patients:
+    post:
+      tags:
+      - "my patient"
+      summary: "Send patients created on offline tearcheck, retrieve their cloud id"
+      operationId: "sendNewPatients"
+      requestBody:
+        description: "Tearcheck local patients. The cloud shall create non-existent patients with the provided data, if the patients already exist no change are made."
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MyTCPatientPostInput'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the patients old ind and cloud id. The tearcheck shall update the old id of the patients."
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCPatientPostOutput'
+        400:
+          description: "Invalid Users"
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_patients:
+    get:
+      tags:
+      - "my patient"
+      summary: "Retrieves the ids of patients who authorized at least one of the authorized clinics on this Tearcheck. This should allow the Tearcheck to remove the patients it has lost access to."
+      operationId: "getPatients"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  example: ""
+        400:
+          description: Error
+          content: {}
+
+  /my_tc_patients_records:
+    post:
+      tags:
+      - "my patient record"
+      summary: "Send patients records created on offline tearcheck, retrieve their cloud id and record_type."
+      operationId: "sendNewPatientsRecords"
+      requestBody:
+        description: "Tearcheck local patients records. The cloud shall create non-existent patients records with the provided data (2 patient record are considered equal if patient_id an clinic_id match in both record), if the record already exist no change are made."
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MyTCPatientRecordPostInput'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the patients records old id and cloud id. The tearcheck shall update the old id of the patients records."
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCPatientRecordPostOutput'
+        400:
+          description: "Invalid Users"
+          content: {}
+      x-codegen-request-body-name: body
+
+  /my_patients_records:
+    get:
+      tags:
+      - "my patient record"
+      summary: "Retrieves the ids of patients records who authorized at least one of the authorized clinics on this Tearcheck. This should allow the Tearcheck to remove the patients record it has lost access to."
+      operationId: "getPatientsRecords"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  example: "42"
+        400:
+          description: Error
+          content: {}
+
+  /my_report/nibut:
+    post:
+      tags:
+        - "my report"
+      summary: "Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      operationId: "sendLocalPatientsReports"
+      requestBody:
+        description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
+        content:
+          'multipart/mixed':
+            schema:
+              $ref: '#/components/schemas/MyReport'
+                    
+                  
+                  
+                    
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCReportPostOutput'
+        400:
+          description: Error
+          content: {}
+
+  /test:
+    post:
+      tags:
+        - 'test'
+      operationId: "test"
+      requestBody: 
+        $ref: '#/components/requestBodies/aaaaa'
+      responses:
+        200:
+          description: "desc"
+          content: {}
+        400:
+          description: Error
+          content: {}
+      
+  /tearcheck/info:
+    get:
+      tags:
+      - tearcheck
+      summary: Get current tearcheck info
+      operationId: infoTearcheck
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tearcheck'
+  /clinic/findAll:
+    get:
+      tags:
+      - clinic
+      summary: 'Find all clinics of which tearcheck is a member '
+      operationId: findAllClinics
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Clinic'
+  /practitioner/findAll:
+    get:
+      tags:
+      - practitioner
+      summary: find all the practitioners who can handle the tearcheck
+      operationId: findAllPractitioners
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Practitioner'
+  /patient/findAll:
+    get:
+      tags:
+      - patient
+      summary: find all the patients who the practioner has access
+      operationId: findAllPatient
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+  /patient:
+    post:
+      tags:
+      - patient
+      summary: send a new patient
+      operationId: sendNewPatient
+      requestBody:
+        description: New patient info
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PatientPost'
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PatientPost'
+        400:
+          description: Invalid Patient
+          content: {}
+      x-codegen-request-body-name: body
+  /patient/{patient_id}:
+    post:
+      tags:
+      - patient
+      summary: update a patient
+      operationId: updatePatient
+      parameters:
+      - name: patient_id
+        in: path
+        description: patient ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: update patient info
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/PatientPost'
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PatientPost'
+        400:
+          description: Invalid Patient
+          content: {}
+      x-codegen-request-body-name: body
+  /patient/{patient_id}/exam:
+    post:
+      tags:
+      - patient
+      summary: add a new exam
+      operationId: createExam
+      parameters:
+      - name: patient_id
+        in: path
+        description: patient ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: exam info
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ExamPost'
+        required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ExamPost'
+        400:
+          description: Invalid Patient
+          content: {}
+      x-codegen-request-body-name: body
+  /patient/{patient_id}/exams:
+    get:
+      tags:
+      - patient
+      summary: find all the patient exams who the practioner has access
+      operationId: findAllExamSummary
+      parameters:
+      - name: patient_id
+        in: path
+        description: patient ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExamSummary'
+  /patient/{patient_id}/exam/{exam_id}:
+    get:
+      tags:
+      - patient
+      summary: find all the details of an exam who the practioner has access
+      operationId: findExam
+      parameters:
+      - name: patient_id
+        in: path
+        description: patient ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: exam_id
+        in: path
+        description: exam ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exam'
+  /image/{exam_report_id}/{field_name}:
+    get:
+      tags:
+      - patient
+      summary: get an image of an exam report
+      operationId: findImageByExamReport
+      parameters:
+      - name: exam_report_id
+        in: path
+        description: exam report ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: field_name
+        in: path
+        description: field name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+
+components:
+  requestBodies:
+    aaaaa:
+      description: "aaa"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Object1'
+              - $ref: '#/components/schemas/Object2'
+            discriminator:
+              propertyName: objectType
+              mapping:
+                obj1: '#/components/schemas/Object1'
+                obj2: '#/components/schemas/Object2'
+
+  schemas:
+  
+    Object1:
+      type: object
+      required:
+        - objectType
+        - object1_value
+      properties:
+        objectType:
+          type: string
+        object1_value:
+          type: string
+        
+    Object2:
+      type: object
+      required:
+        - objectType
+        - object2_value
+      properties:
+        objectType:
+          type: string
+        object2_value:
+          type: string
+
+
+    MyTCUserPostInput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 11
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+  
+    MyTCUserPostOutput:
+      type: object
+      properties:
+        cloud_id:
+          type: integer
+          example: 42
+        tc_id:
+          type: integer
+          example: 11
+        status:
+          type: integer
+        hashed_password:
+          type: string
+          example: "ds4fd57gVhs54gsJ4"
+        hashed_password_iv:
+          type: string
+          example: "8hfgZ8fhY42WGj"
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+  
+    MyUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+        hashed_password:
+          type: string
+          example: "ds4fd57gVhs54gsJ4"
+        hashed_password_iv:
+          type: string
+          example: "8hfgZ8fhY42WGj"
+  
+    MyUserSmall:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        hashed_password:
+          type: string
+          example: "ds4fd57gVhs54gsJ4"
+        hashed_password_iv:
+          type: string
+          example: "8hfgZ8fhY42WGj"
+  
+    MyClinic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "clinic 1"
+        address:
+          type: string
+          example: "15 rue Jules Vallès"
+        city:
+          type: string
+          example: "Villeurbanne"
+        zipCode:
+          type: string
+          example: "69100"
+        country:
+          type: string
+          example: "France"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+        owner_id:
+          type: integer
+          description: user ID
+          example: 1
+  
+    TCClinicMemberPostInput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 12
+        user_id:
+          type: integer
+          example: 42
+        clinic_id:
+          type: integer
+          example: 42
+        creator_id:
+          type: integer
+          example: 42
+        some_privilege:
+          type: integer
+          example: 1
+        some_other_privilege:
+          type: integer
+          example: 0
+  
+    TCClinicMemberPostOutput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 12
+        cloud_id:
+          type: integer
+          example: 42
+        user_id:
+          type: integer
+          example: 42
+        clinic_id:
+          type: integer
+          example: 42
+        creator_id:
+          type: integer
+          example: 42
+        some_privilege:
+          type: integer
+          example: 0
+        some_other_privilege:
+          type: integer
+          example: 0
+  
+    MyClinicMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        user_id:
+          type: integer
+          example: 42
+        clinic_id:
+          type: integer
+          example: 42
+        creator_id:
+          type: integer
+          example: 42
+        some_privilege:
+          type: integer
+          example: 1
+        some_other_privilege:
+          type: integer
+          example: 0
+  
+    MyClinicMemberUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        clinic_id:
+          type: integer
+          example: 42
+        some_privilege:
+          type: integer
+          example: 1
+        some_other_privilege:
+          type: integer
+          example: 0
+  
+    MyPatient:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        status:
+          type: string
+          description: "User Status"
+          enum:
+          - "STATUS_INCOMPLETE"
+          - "STATUS_ACTIVE"
+          - "STATUS_INACTIVE"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  
+    MyTCPatientPostInput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 11
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+  
+    MyTCPatientPostOutput:
+      type: object
+      properties:
+        cloud_id:
+          type: integer
+          example: 42
+        tc_id:
+          type: integer
+          example: 11
+        status:
+          type: integer
+  
+    MyTCPatientRecordPostInput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 11
+        patient_id:
+          type: integer
+          example: 11
+        clinic_id:
+          type: integer
+          example: 11
+        record_type:
+          $ref: '#/components/schemas/MyPatientRecordType'
+  
+    MyTCPatientRecordPostOutput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 11
+        cloud_id:
+          type: integer
+          example: 11
+        record_type:
+          $ref: '#/components/schemas/MyPatientRecordType'
+  
+    MyPatientRecordType:
+      type: string
+      example: "PatientRecordType_Restricted"
+      enum:
+      - "PatientRecordType_Shared"
+      - "PatientRecordType_Restricted"
+
+    MyNibutData:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        breakup_time_ms:
+          type: integer
+    
+    MyTfseData:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        score_data:
+          type: integer
+
+    MyMeibographyData:
+      type: object
+      properties:
+        image_base:
+          type: string
+          format: binary
+        image_processed:
+          type: string
+          format: binary
+        image_3d:
+          type: string
+          format: binary
+        score_data:
+          type: integer
+
+    MyReport:
+      type: object
+      properties:
+        report_info:
+          type: object
+          properties:
+            tc_id:
+              type: integer
+              example: 11
+            record_id:
+              type: integer
+              example: 11
+            creation_date:
+              type: string
+            examination_type:
+              $ref: '#/components/schemas/MyExaminationType'
+            report_version:
+              type: string
+              description: "This parameter combined with examination_type is used to determine the content of the multipart request"
+              example: "1.0.0"
+          required:
+            - examination_type
+      oneOf:
+        - $ref: '#/components/schemas/MyNibutData'
+        - $ref: '#/components/schemas/MyTfseData'
+        - $ref: '#/components/schemas/MyMeibographyData'
+      discriminator:
+        propertyName: examination_type
+        mapping:
+          ExaminationType_NIBUT: '#/components/schemas/MyNibutData'
+          ExaminationType_TFSE: '#/components/schemas/MyTfseData'
+          ExaminationType_Meibography: '#/components/schemas/MyMeibographyData'
+              
+  
+    MyTCReportPostOutput:
+      type: object
+      properties:
+        tc_id:
+          type: integer
+          example: 11
+        cloud_id:
+          type: integer
+          example: 12
+  
+    MyExaminationType:
+      type: string
+      example: "ExaminationType_NIBUT"
+      enum:
+      - "ExaminationType_NIBUT"
+      - "ExaminationType_TFSE"
+      - "ExaminationType_Meibography"
+
+    Tearcheck:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        serialNumber:
+          type: string
+          example: DV-TC1S
+        validityDate:
+          type: string
+          format: date-time
+        nextPaymentDate:
+          type: string
+          format: date-time
+        location:
+          type: string
+          example: Somewhere
+        name:
+          type: string
+          example: DV-TC1S
+        userOwner:
+          type: integer
+          description: User ID
+          example: 1
+    Practitioner:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        status:
+          type: string
+          description: User Status
+          enum:
+          - STATUS_INCOMPLETE
+          - STATUS_ACTIVE
+          - STATUS_INACTIVE
+        gender:
+          type: string
+          description: User Gender
+          enum:
+          - GENDER_FEMALE
+          - GENDER_MALE
+          - GENDER_NON_BINARY
+        diploma:
+          type: string
+          example: ophtalmologiste
+        job:
+          type: string
+          example: ophtalmologue
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+        country:
+          type: string
+          example: "France"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Clinic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "clinic 1"
+        address:
+          type: string
+          example: "15 rue Jules Vallès"
+        city:
+          type: string
+          example: "Villeurbanne"
+        zipCode:
+          type: string
+          example: "69100"
+        country:
+          type: string
+          example: "France"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+        clinicMembers:
+          type: array
+          description: array of user ID
+          example: '[1, 2, 3]'
+          items:
+            type: integer
+        owner:
+          type: integer
+          description: user ID
+          example: 1
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        status:
+          type: string
+          description: User Status
+          enum:
+          - STATUS_INCOMPLETE
+          - STATUS_ACTIVE
+          - STATUS_INACTIVE
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PatientPost:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: "Jean"
+        lastName:
+          type: string
+          example: "Dupond"
+        email:
+          type: string
+          example: "Jean.dupond@dupond.com"
+        phoneNumber:
+          type: string
+          example: "0606060606"
+        birthDate:
+          type: string
+          example: "1980-10-10"
+        address:
+          type: string
+          example: "25 place de la mairie"
+        city:
+          type: string
+          example: "Lyon"
+    ExamSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        examType:
+          type: integer
+          description: Examen Type
+        dateAppointmentAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Exam:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        examType:
+          type: integer
+          description: Examen Type
+        examReportRightSide:
+          type: string
+          description: json_encode report data
+        examReportLeftSide:
+          type: string
+          description: json_encode report data
+        examReportBothSide:
+          type: string
+          description: json_encode report data
+        dateAppointmentAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ExamPost:
+      type: object
+      properties:
+        examType:
+          type: integer
+          description: Examen Type
+        examReportRightSide:
+          type: string
+          description: json_encode report data
+        examReportLeftSide:
+          type: string
+          description: json_encode report data
+        examReportBothSide:
+          type: string
+          description: json_encode report data
+        dateAppointmentAt:
+          type: string
+          format: date-time
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    tearcheck_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
