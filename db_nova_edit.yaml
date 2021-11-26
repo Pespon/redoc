@@ -348,16 +348,16 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              allOf:
-                - $ref: '#/components/schemas/MyReportMeibography'
-                - $ref: '#/components/schemas/MyReportTfse'
-                - $ref: '#/components/schemas/MyReportNibut'
               discriminator:
                 propertyName: examination_name
                 mapping:
                   meibography: '#/components/schemas/MyReportMeibography'
                   tfse: '#/components/schemas/MyReportTfse'
                   nibut: '#/components/schemas/MyReportNibut'
+              allOf:
+                - $ref: '#/components/schemas/MyReportMeibography'
+                - $ref: '#/components/schemas/MyReportTfse'
+                - $ref: '#/components/schemas/MyReportNibut'
 
                     
                   
