@@ -354,6 +354,11 @@ paths:
                 - $ref: '#/components/schemas/MyReportNibut'
               discriminator:
                 propertyName: examination_name
+                mapping:
+                  meibography: '#/components/schemas/MyReportMeibography'
+                  tfse: '#/components/schemas/MyReportTfse'
+                  nibut: '#/components/schemas/MyReportNibut'
+
                     
                   
                   
