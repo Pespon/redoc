@@ -318,7 +318,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              $ref: '#/components/schemas/MyReport'
+              $ref: '#/components/schemas/MyReport2'
                     
                   
                   
@@ -337,20 +337,57 @@ paths:
           description: Error
           content: {}
 
-  /test:
+  /my_report2:
     post:
       tags:
-        - 'test'
-      operationId: "test"
-      requestBody: 
-        $ref: '#/components/requestBodies/aaaaa'
+        - "my report"
+      summary: "Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      operationId: "SOMEVAL"
+      requestBody:
+        description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
+        content:
+          'multipart/mixed':
+            schema:
+              oneOf:
+                - allOf:
+                  - $ref: '#/components/schemas/MyReportMeibography'
+              discriminator:
+                propertyName: examination_name
+                    
+                  
+                  
+                    
+        required: true
       responses:
         200:
-          description: "desc"
-          content: {}
+          description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCReportPostOutput'
         400:
           description: Error
           content: {}
+
+  /animals:
+    post:
+      tags:
+        - "test"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Dog'
+                - $ref: '#/components/schemas/Cat'
+                - $ref: '#/components/schemas/Fish'
+              discriminator:
+                propertyName: animal_type
+      responses:
+        '201':
+          description: Created
       
   /tearcheck/info:
     get:
@@ -581,44 +618,42 @@ paths:
                 format: binary
 
 components:
-  requestBodies:
-    aaaaa:
-      description: "aaa"
-      content:
-        application/json:
-          schema:
-            oneOf:
-              - $ref: '#/components/schemas/Object1'
-              - $ref: '#/components/schemas/Object2'
-            discriminator:
-              propertyName: objectType
-              mapping:
-                obj1: '#/components/schemas/Object1'
-                obj2: '#/components/schemas/Object2'
 
   schemas:
   
-    Object1:
+    Animal:
       type: object
       required:
-        - objectType
-        - object1_value
+        - animal_type
+        - name
       properties:
-        objectType:
+        animal_type:
           type: string
-        object1_value:
+        name:
           type: string
-        
-    Object2:
-      type: object
-      required:
-        - objectType
-        - object2_value
-      properties:
-        objectType:
-          type: string
-        object2_value:
-          type: string
+      discriminator:
+        propertyName: animal_type
+    Dog:
+      allOf:
+        - $ref: "#/components/schemas/Animal"
+        - type: object
+          properties:
+            playsFetch:
+              type: string
+    Cat:
+      allOf:
+        - $ref: "#/components/schemas/Animal"
+        - type: object
+          properties:
+            likesToPurr:
+              type: string
+    Fish:
+      allOf:
+        - $ref: "#/components/schemas/Animal"
+        - type: object
+          properties:
+            water-type:
+              type: string
 
 
     MyTCUserPostInput:
@@ -1000,7 +1035,9 @@ components:
           format: binary
         score_data:
           type: integer
+  
 
+  
     MyReport:
       type: object
       properties:
@@ -1016,7 +1053,7 @@ components:
             creation_date:
               type: string
             examination_type:
-              $ref: '#/components/schemas/MyExaminationType'
+              type: string
             report_version:
               type: string
               description: "This parameter combined with examination_type is used to determine the content of the multipart request"
@@ -1030,10 +1067,85 @@ components:
       discriminator:
         propertyName: examination_type
         mapping:
-          ExaminationType_NIBUT: '#/components/schemas/MyNibutData'
-          ExaminationType_TFSE: '#/components/schemas/MyTfseData'
-          ExaminationType_Meibography: '#/components/schemas/MyMeibographyData'
-              
+          MyNibutData: '#/components/schemas/MyNibutData'
+          MyTfseData: '#/components/schemas/MyTfseData'
+          MyMeibographyData: '#/components/schemas/MyMeibographyData'
+
+    MyReport2:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/MyNibutData'
+      properties:
+        report_info:
+          type: object
+          properties:
+            tc_id:
+              type: integer
+              example: 11
+            record_id:
+              type: integer
+              example: 11
+            creation_date:
+              type: string
+            examination_type:
+              type: string
+            report_version:
+              type: string
+              description: "This parameter combined with examination_type is used to determine the content of the multipart request"
+              example: "1.0.0"
+          required:
+            - examination_type
+  
+    MyReport3:
+      type: object
+      required:
+        - examination_name
+      discriminator:
+        propertyName: examination_name
+      properties:
+        examination_name:
+          type: string
+      
+    MyReportNibut:
+      allOf:
+        - $ref: "#/components/schemas/MyReport3"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            breakup_time_ms:
+              type: integer
+
+    MyReportTfse:
+      allOf:
+        - $ref: "#/components/schemas/MyReport3"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            score_data:
+              type: string
+              format: binary
+
+    MyReportMeibography:
+      allOf:
+        - $ref: "#/components/schemas/MyReport3"
+        - type: object
+          properties:
+            image_base:
+              type: string
+              format: binary
+            image_processed:
+              type: string
+              format: binary
+            image_3d:
+              type: string
+              format: binary
+            score_data:
+              type: string
+              format: binary
   
     MyTCReportPostOutput:
       type: object
