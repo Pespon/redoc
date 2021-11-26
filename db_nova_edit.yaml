@@ -348,9 +348,10 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              oneOf:
-                - allOf:
-                  - $ref: '#/components/schemas/MyReportMeibography'
+              allOf:
+                - $ref: '#/components/schemas/MyReportMeibography'
+                - $ref: '#/components/schemas/MyReportTfse'
+                - $ref: '#/components/schemas/MyReportNibut'
               discriminator:
                 propertyName: examination_name
                     
