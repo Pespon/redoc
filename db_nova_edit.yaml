@@ -318,20 +318,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              discriminator:
-                propertyName: examination_name
-                mapping:
-                  ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
-                  ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
-                  ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
-                  ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-                  ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus2'
-              allOf:
-                - $ref: '#/components/schemas/MyReportNibut'
-                - $ref: '#/components/schemas/MyReportTfse'
-                - $ref: '#/components/schemas/MyReportMeibography'
-                - $ref: '#/components/schemas/MyReportOsie'
-                - $ref: '#/components/schemas/MyReportTearMeniscus2'
+              $ref: '#/components/schemas/MyReport'
         required: true
       responses:
         200:
@@ -961,7 +948,7 @@ components:
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
 
-    MyReport:
+    MyReportBase:
       type: object
       required:
         - examination_name
@@ -973,7 +960,7 @@ components:
       
     MyReportNibut:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image:
@@ -984,7 +971,7 @@ components:
 
     MyReportTfse:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image:
@@ -996,7 +983,7 @@ components:
 
     MyReportMeibography:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image_base:
@@ -1014,7 +1001,7 @@ components:
   
     MyReportOsie:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image:
@@ -1025,7 +1012,7 @@ components:
 
     MyReportAbortiveBlinking:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             blink_count:
@@ -1052,7 +1039,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
 
     MyReportTearMeniscus2:
       type: object
@@ -1074,7 +1061,7 @@ components:
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image:
@@ -1085,7 +1072,7 @@ components:
 
     MyReportTearMeniscusV_0_0_2:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportBase"
         - type: object
           properties:
             image:
@@ -1095,6 +1082,22 @@ components:
               type: integer
             tear_meniscus_size_v2:
               type: integer
+  
+    MyReport:
+      discriminator:
+        propertyName: examination_name
+        mapping:
+          ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
+          ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
+          ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
+          ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
+          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus2'
+      allOf:
+        - $ref: '#/components/schemas/MyReportNibut'
+        - $ref: '#/components/schemas/MyReportTfse'
+        - $ref: '#/components/schemas/MyReportMeibography'
+        - $ref: '#/components/schemas/MyReportOsie'
+        - $ref: '#/components/schemas/MyReportTearMeniscus2'
   
 
     MyTCReportPostOutput:
