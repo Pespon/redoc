@@ -1062,16 +1062,15 @@ components:
       type: object
       required:
         - examination_version
+      properties:
+        examination_version:
+          type: string
+          example: '0.0.1'
       discriminator:
         propertyName: examination_version
         mapping:
           0_0_1: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
           0_0_2: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-    
-      properties:
-        examination_version:
-          type: string
-          example: '0.0.1'
       allOf:
         - $ref: "#/components/schemas/MyReport"
         - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
