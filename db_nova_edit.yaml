@@ -922,8 +922,6 @@ components:
       - "ExaminationType_Meibography"
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
-      oneOf:
-
       
     MyReportNibut:
       properties:
