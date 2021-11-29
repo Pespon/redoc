@@ -326,19 +326,12 @@ paths:
                   ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
                   ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
                   ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
-              oneOf:
+              allOf:
                 - $ref: '#/components/schemas/MyReportNibut'
                 - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportMeibography'
                 - $ref: '#/components/schemas/MyReportOsie'
-                - discriminator:
-                    propertyName: examination_version
-                    mapping:
-                      AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-                      BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-                - oneOf:
-                    - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-                    - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+                - $ref: '#/components/schemas/MyReportTearMeniscus'
 
         required: true
       responses:
@@ -582,44 +575,9 @@ paths:
                 type: string
                 format: binary
 
+
 components:
-
   schemas:
-  
-    Animal:
-      type: object
-      required:
-        - animal_type
-        - name
-      properties:
-        animal_type:
-          type: string
-        name:
-          type: string
-      discriminator:
-        propertyName: animal_type
-    Dog:
-      allOf:
-        - $ref: "#/components/schemas/Animal"
-        - type: object
-          properties:
-            playsFetch:
-              type: string
-    Cat:
-      allOf:
-        - $ref: "#/components/schemas/Animal"
-        - type: object
-          properties:
-            likesToPurr:
-              type: string
-    Fish:
-      allOf:
-        - $ref: "#/components/schemas/Animal"
-        - type: object
-          properties:
-            water-type:
-              type: string
-
 
     MyTCUserPostInput:
       type: object
@@ -983,15 +941,11 @@ components:
       type: object
       required:
         - examination_name
-        - examination_version
       discriminator:
         propertyName: examination_name
       properties:
         examination_name:
           $ref: "#/components/schemas/MyExaminationType"
-        examination_version:
-          type: string
-          example: '1.0.0'
       
     MyReportNibut:
       allOf:
@@ -1045,6 +999,23 @@ components:
             score:
               type: integer
 
+
+    MyReportTearMeniscus:
+      required:
+        - examination_version
+      discriminator:
+        propertyName: examination_version
+        mapping:
+          AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+          BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+      properties:
+        examination_version:
+          type: string
+          example: '1.0.0'
+      allOf:
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+
     MyReportTearMeniscusV_0_0_1:
       allOf:
         - $ref: "#/components/schemas/MyReport"
@@ -1069,24 +1040,6 @@ components:
             tear_meniscus_size_v2:
               type: integer
   
-    MyReportTearMeniscus:
-      allOf:
-        - $ref: "#/components/schemas/MyReport"
-        - type: object
-          required:
-            - examination_version
-          properties:
-            examination_version:
-              type: string
-              example: '1.0.0'
-        - discriminator:
-            propertyName: examination_version
-            mapping:
-              AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-              BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-        - allOf:
-          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyTCReportPostOutput:
       type: object
