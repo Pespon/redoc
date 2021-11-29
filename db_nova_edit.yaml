@@ -986,17 +986,17 @@ components:
       type: string
       example: "MyTearMeniscusVersion_1_0_0"
       enum:
-      - "MyTearMeniscusVersion_1_0_0"
-      - "MyTearMeniscusVersion_2_0_0"
+        - "MyTearMeniscusVersion_1_0_0"
+        - "MyTearMeniscusVersion_2_0_0"
 
     MyReportTearMeniscus:
-      allOf:
-      - $ref: '#/components/schemas/MyReport'
-      - properties:
-          examination_version:
-            $ref: '#/components/schemas/MyTearMeniscusVersion'
       required:
         - examination_version
+      properties:
+        allOf:
+          $ref: '#/components/schemas/MyReport'
+        examination_version:
+          $ref: '#/components/schemas/MyTearMeniscusVersion'
       discriminator:
         propertyName: examination_version
         mapping:
