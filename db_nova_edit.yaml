@@ -984,18 +984,19 @@ components:
 
     MyReportTearMeniscus:
       allOf:
-      - $ref: '#/components/schemas/MyReport'
-      - required:
-        - examination_version
-      - properties:
-          examination_version:
-            type: string
-            example: "1.0.0"
-        discriminator:
-          propertyName: examination_version
-          mapping:
-            AAA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-            BBB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+        - $ref: '#/components/schemas/MyReport'
+        - type: object
+          required:
+            - examination_version
+          properties:
+            examination_version:
+              type: string
+              example: "1.0.0"
+          discriminator:
+            propertyName: examination_version
+            mapping:
+              AAA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+              BBB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
