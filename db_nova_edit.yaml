@@ -311,7 +311,7 @@ paths:
     post:
       tags:
         - "my report"
-      summary: "HH Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      summary: "III Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
       operationId: "SOMEVAL"
       requestBody:
         description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
@@ -983,6 +983,7 @@ components:
               type: integer
 
     MyReportTearMeniscus:
+      type: object
       allOf:
         - $ref: '#/components/schemas/MyReport'
         - type: object
