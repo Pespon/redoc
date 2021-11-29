@@ -1015,7 +1015,7 @@ components:
             mapping:
               AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
               BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
-          oneOf:
+          allOf:
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
 
