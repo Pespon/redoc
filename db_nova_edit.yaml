@@ -344,7 +344,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              $ref: '#/components/schemas/MyTearMeniscusReport'
+              $ref: '#/components/schemas/MyReportTearMeniscus'
         required: true
       responses:
         200:
