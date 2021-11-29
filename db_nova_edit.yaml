@@ -1043,7 +1043,7 @@ components:
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-      allOf:
+      oneOf:
         - $ref: '#/components/schemas/MyReportNibut'
         - $ref: '#/components/schemas/MyReportTfse'
         - $ref: '#/components/schemas/MyReportMeibography'
