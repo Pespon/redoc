@@ -974,6 +974,7 @@ components:
           type: integer
 
     MyReportTearMeniscus:
+      type: object
       required:
         - examination_version
       properties:
