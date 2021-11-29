@@ -19,8 +19,8 @@ tags:
 - name: "patient"
 
 paths:
-  /my_tc_users:
-    summary: "Send users created on offline tearcheck, retrieve their cloud id and password fdsf sdf sdf sdf "
+  /new_users:
+    summary: "Send users created on tearcheck, retrieve their cloud id and password"
     post:
       tags:
       - "my user"
@@ -49,7 +49,7 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /my_users:
+  /all_users:
     get:
       tags:
       - "my user"
@@ -65,7 +65,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/MyUserSmall'
 
-  /my_user:
+  /user:
     get:
       tags:
       - "my user"
@@ -99,7 +99,7 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /my_clinics:
+  /all_clinics:
     get:
       tags:
       - "my clinic"
@@ -115,7 +115,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/MyClinic'
 
-  /my_clinics/patients:
+  /clinics_patients_ids:
     post:
       tags:
       - "my clinic"
@@ -142,7 +142,7 @@ paths:
                   $ref: '#/components/schemas/MyPatient'
       x-codegen-request-body-name: body
 
-  /my_tc_clinic_member:
+  /new_clinic_members:
     post:
       tags:
       - "my clinic member"
@@ -171,7 +171,7 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /my_clinic_members:
+  /all_clinic_members:
     get:
       tags:
       - "my clinic member"
@@ -187,7 +187,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/MyClinicMember'
 
-  /my_clinic_member:
+  /clinic_member:
     put:
       tags:
       - "my clinic member"
@@ -209,11 +209,11 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /my_tc_patients:
+  /new_patients:
     post:
       tags:
       - "my patient"
-      summary: "Send patients created on offline tearcheck, retrieve their cloud id"
+      summary: "Send patients created on tearcheck, retrieve their cloud id"
       operationId: "sendNewPatients"
       requestBody:
         description: "Tearcheck local patients. The cloud shall create non-existent patients with the provided data, if the patients already exist no change are made."
@@ -236,9 +236,8 @@ paths:
         400:
           description: "Invalid Users"
           content: {}
-      x-codegen-request-body-name: body
 
-  /my_patients:
+  /all_patients_ids:
     get:
       tags:
       - "my patient"
@@ -252,10 +251,38 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  example: ""
+                  type: integer
+              example: [42, 43, 44]
         400:
           description: Error
+          content: {}
+
+  /new_patients_authorizations:
+    post:
+      tags:
+      - "my patient authorization"
+      summary: "Send patients authorisations created on tearcheck, retrieve their cloud id."
+      operationId: "sendNewPatientsAuthorizations"
+      requestBody:
+        description: "Tearcheck local patients. The cloud shall create non-existent patients with the provided data, if the patients already exist no change are made. id is the patient local id."
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MyTCPatientAuthorization'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the patients old ind and cloud id. The tearcheck shall update the old id of the patients (initial_id) by the patients new id (id)"
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCPatientAuthorizationPostOutput'
+        400:
+          description: "Invalid Users"
           content: {}
 
   /my_tc_patients_records:
@@ -878,6 +905,35 @@ components:
         status:
           type: integer
   
+    MyTCPatientAuthorization:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 11
+        patient_id:
+          type: integer
+          example: 11
+        clinic_id:
+          type: integer
+          example: 11
+        clinic_member_id:
+          description: "Id of the clinic member who added this authorization"
+          type: integer
+          example: 11
+        creation_date:
+          type: string
+  
+    MyTCPatientAuthorizationPostOutput:
+      type: object
+      properties:
+        initial_id:
+          description: "id sended by the tearcheck"
+          type: integer
+          example: 11
+      allOf:
+        - $ref: '#/components/schemas/MyTCPatientAuthorization'
+  
     MyTCPatientRecordPostInput:
       type: object
       properties:
@@ -982,37 +1038,9 @@ components:
             blink_frequency:
               type: integer
 
-    MyTearMeniscusVersion:
-      type: string
-      example: "MyTearMeniscusVersion_1_0_0"
-      enum:
-      - "MyTearMeniscusVersion_1_0_0"
-      - "MyTearMeniscusVersion_2_0_0"
-
     MyReportTearMeniscus:
       allOf:
       - $ref: '#/components/schemas/MyReport'
-      - required:
-        - examination_version
-      - properties:
-          examination_version:
-            type: string
-      - discriminator:
-          propertyName: examination_version
-
-    MyReportTearMeniscusV_0_0_1:
-      allOf:
-      - $ref: '#/components/schemas/MyReportTearMeniscus'
-      - properties:
-          image:
-            type: string
-            format: binary
-          tear_meniscus_size:
-            type: integer
-
-    MyReportTearMeniscusV_0_0_2:
-      allOf:
-      - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
             type: string
@@ -1021,7 +1049,7 @@ components:
             type: integer
           tear_meniscus_size_v2:
             type: integer
-  
+
     MyReport:
       type: object
       allOf:
