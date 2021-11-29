@@ -990,9 +990,6 @@ components:
       - "MyTearMeniscusVersion_2_0_0"
 
     MyReportTearMeniscus:
-      allOf:
-      - $ref: '#/components/schemas/MyReport'
-      - type: object
         required:
           - examination_version
         properties:
@@ -1006,6 +1003,7 @@ components:
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
+      - $ref: '#/components/schemas/MyReport'
       - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
@@ -1016,6 +1014,7 @@ components:
 
     MyReportTearMeniscusV_0_0_2:
       allOf:
+      - $ref: '#/components/schemas/MyReport'
       - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
