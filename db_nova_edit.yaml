@@ -999,9 +999,6 @@ components:
             type: string
       - discriminator:
           propertyName: examination_version
-          mapping:
-            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
