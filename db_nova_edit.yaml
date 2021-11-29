@@ -983,18 +983,22 @@ components:
               type: integer
 
     MyReportTearMeniscus:
+      type: object
+      required:
+        - examination_version
+      properties:
+        examination_version:
+          type: string
+          example: "1.0.0"
       discriminator:
         propertyName: examination_version
         mapping:
-          AAAA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-          BBBB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-      allOf:
-        - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-        - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+          AAA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+          BBB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
-      - $ref: '#/components/schemas/MyReportVersionned'
+      - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
             type: string
@@ -1004,7 +1008,7 @@ components:
 
     MyReportTearMeniscusV_0_0_2:
       allOf:
-      - $ref: '#/components/schemas/MyReportVersionned'
+      - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
             type: string
@@ -1014,15 +1018,6 @@ components:
           tear_meniscus_size_v2:
             type: integer
   
-    MyReportVersionned:
-      type: object
-      required:
-        - examination_version
-      properties:
-        examination_version:
-          type: string
-          example: "1.0.0"
-    
     MyReport:
       type: object
       required:
