@@ -1004,6 +1004,20 @@ components:
             MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
             MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
+    MyReportTearMeniscusTest:
+      allOf:
+      - $ref: '#/components/schemas/MyReport'
+      - required:
+          - examination_version
+      - properties:
+          examination_version:
+            $ref: '#/components/schemas/MyTearMeniscusVersion'
+      - discriminator:
+          propertyName: examination_version
+          mapping:
+            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+
     MyReportTearMeniscusV_0_0_1:
       allOf:
       - $ref: '#/components/schemas/MyReportTearMeniscus'
@@ -1039,7 +1053,8 @@ components:
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscusTest'
+          
 
     MyTCReportPostOutput:
       type: object
