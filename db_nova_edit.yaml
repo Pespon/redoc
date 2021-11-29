@@ -925,7 +925,7 @@ components:
       
     MyReportNibut:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
+      - $ref: '#/components/schemas/MyReport'
       - properties:
           image:
             type: string
@@ -935,7 +935,7 @@ components:
 
     MyReportTfse:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
+      - $ref: '#/components/schemas/MyReport'
       - properties:
           image:
             type: string
@@ -946,7 +946,7 @@ components:
 
     MyReportMeibography:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
+      - $ref: '#/components/schemas/MyReport'
       - properties:
           image_base:
             type: string
@@ -963,7 +963,7 @@ components:
   
     MyReportOsie:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
+      - $ref: '#/components/schemas/MyReport'
       - properties:
           image:
             type: string
@@ -973,7 +973,7 @@ components:
 
     MyReportAbortiveBlinking:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
+      - $ref: '#/components/schemas/MyReport'
       - properties:
             blink_count:
               type: integer
@@ -994,7 +994,6 @@ components:
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
       - $ref: '#/components/schemas/MyReportVersionned'
       - properties:
           image:
@@ -1005,7 +1004,6 @@ components:
 
     MyReportTearMeniscusV_0_0_2:
       allOf:
-      - $ref: '#/components/schemas/MyTypedReport'
       - $ref: '#/components/schemas/MyReportVersionned'
       - properties:
           image:
@@ -1015,14 +1013,6 @@ components:
             type: integer
           tear_meniscus_size_v2:
             type: integer
-  
-    MyTypedReport:
-      type: object
-      required:
-        - examination_name
-      properties:
-        examination_name:
-          $ref: "#/components/schemas/MyExaminationType"
   
     MyReportVersionned:
       type: object
@@ -1034,6 +1024,12 @@ components:
           example: "1.0.0"
     
     MyReport:
+      type: object
+      required:
+        - examination_name
+      properties:
+        examination_name:
+          $ref: "#/components/schemas/MyExaminationType"
       discriminator:
         propertyName: examination_name
         mapping:
