@@ -318,23 +318,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-                required:
-                  - examination_name
-                properties:
-                  examination_name:
-                    $ref: "#/components/schemas/MyExaminationType"
-                discriminator:
-                  propertyName: examination_name
-                  mapping:
-                    ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
-                    ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
-                    ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
-                    ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-                allOf:
-                  - $ref: '#/components/schemas/MyReportNibut'
-                  - $ref: '#/components/schemas/MyReportTfse'
-                  - $ref: '#/components/schemas/MyReportMeibography'
-                  - $ref: '#/components/schemas/MyReportOsie'
+              $ref: '#/components/schemas/MyReport'
         required: true
       responses:
         200:
@@ -1042,6 +1026,7 @@ components:
               type: integer
   
     MyReport:
+      type: object
       required:
         - examination_name
       properties:
