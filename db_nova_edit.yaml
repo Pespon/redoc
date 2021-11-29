@@ -1027,20 +1027,25 @@ components:
             type: integer
   
     MyReport:
-      type: object
       required:
-        - examination_name
+        - examination_type
       properties:
-        examination_name:
+        examination_type:
           $ref: "#/components/schemas/MyExaminationType"
       discriminator:
-        propertyName: examination_name
+        propertyName: examination_type
         mapping:
           ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
           ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+      allOf:
+        - $ref: '#/components/schemas/MyReportNibut'
+        - $ref: '#/components/schemas/MyReportTfse'
+        - $ref: '#/components/schemas/MyReportMeibography'
+        - $ref: '#/components/schemas/MyReportOsie'
+        - $ref: '#/components/schemas/MyReportTearMeniscus'
 
     MyTCReportPostOutput:
       type: object
