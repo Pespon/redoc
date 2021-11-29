@@ -331,7 +331,14 @@ paths:
                 - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportMeibography'
                 - $ref: '#/components/schemas/MyReportOsie'
-                - $ref: '#/components/schemas/MyReportTearMeniscus'
+                - allOf:
+                    - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+                    - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+                - discriminator:
+                    propertyName: examination_version
+                    mapping:
+                      AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+                      BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
         required: true
       responses:
@@ -976,11 +983,15 @@ components:
       type: object
       required:
         - examination_name
+        - examination_version
       discriminator:
         propertyName: examination_name
       properties:
         examination_name:
           $ref: "#/components/schemas/MyExaminationType"
+        examination_version:
+          type: string
+          example: '1.0.0'
       
     MyReportNibut:
       allOf:
@@ -1035,24 +1046,28 @@ components:
               type: integer
 
     MyReportTearMeniscusV_0_0_1:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        tear_meniscus_size:
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
 
     MyReportTearMeniscusV_0_0_2:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        tear_meniscus_size:
-          type: integer
-        tear_meniscus_size_v2:
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
+            tear_meniscus_size_v2:
+              type: integer
   
     MyReportTearMeniscus:
       allOf:
@@ -1069,7 +1084,7 @@ components:
             mapping:
               AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
               BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-        - oneOf:
+        - allOf:
           - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
           - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
