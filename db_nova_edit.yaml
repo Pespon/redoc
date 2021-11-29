@@ -990,7 +990,6 @@ components:
       - "MyTearMeniscusVersion_2_0_0"
 
     MyReportTearMeniscus:
-      type: object
       allOf:
       - $ref: '#/components/schemas/MyReport'
       - required:
