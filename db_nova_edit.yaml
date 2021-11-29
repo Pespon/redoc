@@ -1005,18 +1005,16 @@ components:
             MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusTest:
-      allOf:
-      - $ref: '#/components/schemas/MyReport'
-      - required:
-          - examination_version
-      - properties:
-          examination_version:
-            $ref: '#/components/schemas/MyTearMeniscusVersion'
-      - discriminator:
-          propertyName: examination_version
-          mapping:
-            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+      required:
+        - examination_version
+      properties:
+        examination_version:
+          $ref: '#/components/schemas/MyTearMeniscusVersion'
+      discriminator:
+        propertyName: examination_version
+        mapping:
+          MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+          MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
