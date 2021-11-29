@@ -1060,7 +1060,6 @@ components:
         - $ref: '#/components/schemas/MyReportTfse'
         - $ref: '#/components/schemas/MyReportMeibography'
         - $ref: '#/components/schemas/MyReportOsie'
-        - $ref: '#/components/schemas/MyReportTearMeniscus2'
   
 
     MyTCReportPostOutput:
