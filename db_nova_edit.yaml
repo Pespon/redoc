@@ -960,7 +960,7 @@ components:
             format: binary
           score_data:
             type: string
-              format: binary
+            format: binary
   
     MyReportOsie:
       allOf:
