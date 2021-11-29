@@ -925,7 +925,6 @@ components:
 
       
     MyReportNibut:
-      type: object
       properties:
         image:
           type: string
@@ -943,7 +942,6 @@ components:
           format: binary
 
     MyReportMeibography:
-      type: object
       properties:
         image_base:
           type: string
@@ -959,7 +957,6 @@ components:
           format: binary
   
     MyReportOsie:
-      type: object
       properties:
         image:
           type: string
@@ -968,7 +965,6 @@ components:
           type: integer
 
     MyReportAbortiveBlinking:
-      type: object
       properties:
         blink_count:
           type: integer
@@ -1030,7 +1026,6 @@ components:
               type: integer
   
     MyReport:
-      type: object
       required:
         - examination_name
       properties:
@@ -1043,11 +1038,12 @@ components:
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-      oneOf:
+      allOf:
         - $ref: '#/components/schemas/MyReportNibut'
         - $ref: '#/components/schemas/MyReportTfse'
         - $ref: '#/components/schemas/MyReportMeibography'
         - $ref: '#/components/schemas/MyReportOsie'
+        - $ref: '#/components/schemas/MyReportTearMeniscus2'
   
 
     MyTCReportPostOutput:
