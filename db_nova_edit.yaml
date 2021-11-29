@@ -1035,28 +1035,24 @@ components:
               type: integer
 
     MyReportTearMeniscusV_0_0_1:
-      allOf:
-        - $ref: "#/components/schemas/MyReport"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            tear_meniscus_size:
-              type: integer
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        tear_meniscus_size:
+          type: integer
 
     MyReportTearMeniscusV_0_0_2:
-      allOf:
-        - $ref: "#/components/schemas/MyReport"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            tear_meniscus_size:
-              type: integer
-            tear_meniscus_size_v2:
-              type: integer
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+        tear_meniscus_size:
+          type: integer
+        tear_meniscus_size_v2:
+          type: integer
   
     MyReportTearMeniscus:
       allOf:
