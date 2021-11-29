@@ -333,32 +333,6 @@ paths:
           description: Error
           content: {}
 
-  /my_report_test:
-    post:
-      tags:
-        - "my report"
-      summary: "aa."
-      operationId: "SOaMEVAL"
-      requestBody:
-        description: "aa."
-        content:
-          'multipart/mixed':
-            schema:
-              $ref: '#/components/schemas/MyReportTearMeniscus'
-        required: true
-      responses:
-        200:
-          description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MyTCReportPostOutput'
-        400:
-          description: Error
-          content: {}
-          
   /tearcheck/info:
     get:
       tags:
@@ -1024,7 +998,7 @@ components:
       - properties:
           examination_version:
             type: string
-        discriminator:
+      - discriminator:
           propertyName: examination_version
           mapping:
             MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
