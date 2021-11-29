@@ -321,18 +321,14 @@ paths:
               discriminator:
                 propertyName: examination_name
                 mapping:
-                  meibography: '#/components/schemas/MyReportMeibography'
-                  tfse: '#/components/schemas/MyReportTfse'
-                  nibut: '#/components/schemas/MyReportNibut'
+                  ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
+                  ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
+                  ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
               allOf:
                 - $ref: '#/components/schemas/MyReportMeibography'
                 - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportNibut'
 
-                    
-                  
-                  
-                    
         required: true
       responses:
         200:
@@ -978,7 +974,7 @@ components:
         propertyName: examination_name
       properties:
         examination_name:
-          type: string
+          $ref: "#/components/schemas/MyExaminationType"
       
     MyReportNibut:
       allOf:
