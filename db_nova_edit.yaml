@@ -984,25 +984,25 @@ components:
 
     MyTearMeniscusVersion:
       type: string
-      example: "MyTearMeniscusVersion_1.0.0"
+      example: "MyTearMeniscusVersion_1_0_0"
       enum:
       - "MyTearMeniscusVersion_1_0_0"
       - "MyTearMeniscusVersion_2_0_0"
 
     MyReportTearMeniscus:
       allOf:
-        - $ref: '#/components/schemas/MyReport'
-        - type: object
-          required:
-            - examination_version
-          properties:
-            examination_version:
-              $ref: '#/components/schemas/MyTearMeniscusVersion'
-          discriminator:
-            propertyName: examination_version
-            mapping:
-              MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-              MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+      - $ref: '#/components/schemas/MyReport'
+      - type: object
+        required:
+          - examination_version
+        properties:
+          examination_version:
+            $ref: '#/components/schemas/MyTearMeniscusVersion'
+        discriminator:
+          propertyName: examination_version
+          mapping:
+            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
