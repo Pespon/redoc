@@ -357,8 +357,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              $ref: '#/components/schemas/MyReport'
-        required: true
+              $ref: '#/components/schemas/MyReportXXX'
       responses:
         200:
           description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
@@ -962,7 +961,7 @@ components:
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
 
-    MyReport:
+    MyReportXXX:
       type: object
       required:
         - examination_name
@@ -974,7 +973,7 @@ components:
       
     MyReportNibut:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           properties:
             image:
@@ -985,7 +984,7 @@ components:
 
     MyReportTfse:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           properties:
             image:
@@ -997,7 +996,7 @@ components:
 
     MyReportMeibography:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           properties:
             image_base:
@@ -1015,7 +1014,7 @@ components:
   
     MyReportOsie:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           properties:
             image:
@@ -1026,7 +1025,7 @@ components:
 
     MyReportAbortiveBlinking:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           properties:
             blink_count:
@@ -1038,7 +1037,7 @@ components:
 
     MyReportTearMeniscus:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           required:
             - examination_version
