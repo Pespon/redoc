@@ -1023,7 +1023,7 @@ components:
       - properties:
           examination_version:
             type: string
-      - discriminator:
+        discriminator:
           propertyName: examination_version
           mapping:
             MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
