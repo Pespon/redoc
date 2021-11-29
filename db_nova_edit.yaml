@@ -1064,7 +1064,7 @@ components:
             ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
             ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
             ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-#          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+            ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
           
 
     MyTCReportPostOutput:
