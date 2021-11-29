@@ -325,13 +325,13 @@ paths:
                   ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
                   ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
                   ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-                  ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+                  ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus2'
               allOf:
                 - $ref: '#/components/schemas/MyReportNibut'
                 - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportMeibography'
                 - $ref: '#/components/schemas/MyReportOsie'
-                - $ref: '#/components/schemas/MyReportTearMeniscus'
+                - $ref: '#/components/schemas/MyReportTearMeniscus2'
         required: true
       responses:
         200:
@@ -357,7 +357,7 @@ paths:
         content:
           'multipart/mixed':
             schema:
-              $ref: '#/components/schemas/MyReportXXX'
+              $ref: '#/components/schemas/MyReport'
       responses:
         200:
           description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
@@ -961,7 +961,7 @@ components:
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
 
-    MyReportXXX:
+    MyReport:
       type: object
       required:
         - examination_name
@@ -973,7 +973,7 @@ components:
       
     MyReportNibut:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image:
@@ -984,7 +984,7 @@ components:
 
     MyReportTfse:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image:
@@ -996,7 +996,7 @@ components:
 
     MyReportMeibography:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image_base:
@@ -1014,7 +1014,7 @@ components:
   
     MyReportOsie:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image:
@@ -1025,7 +1025,7 @@ components:
 
     MyReportAbortiveBlinking:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             blink_count:
@@ -1037,7 +1037,6 @@ components:
 
     MyReportTearMeniscus:
       allOf:
-        - $ref: "#/components/schemas/MyReportXXX"
         - type: object
           required:
             - examination_version
@@ -1053,26 +1052,49 @@ components:
           allOf:
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
             - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+        - $ref: "#/components/schemas/MyReport"
+
+    MyReportTearMeniscus2:
+      type: object
+      required:
+        - examination_version
+      properties:
+        examination_version:
+          type: string
+          example: '1.0.0'
+      discriminator:
+        propertyName: examination_version
+        mapping:
+          AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+          BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+      allOf:
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+
 
     MyReportTearMeniscusV_0_0_1:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        tear_meniscus_size:
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
 
     MyReportTearMeniscusV_0_0_2:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        tear_meniscus_size:
-          type: integer
-        tear_meniscus_size_v2:
-          type: integer
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
+            tear_meniscus_size_v2:
+              type: integer
   
 
     MyTCReportPostOutput:
