@@ -346,7 +346,7 @@ paths:
         400:
           description: Error
           content: {}
-      
+
   /tearcheck/info:
     get:
       tags:
@@ -1059,22 +1059,23 @@ components:
               type: integer
   
     MyReportTearMeniscus:
-      type: object
-      required:
-        - examination_version
-      properties:
-        examination_version:
-          type: string
-          example: '0.0.1'
-      discriminator:
-        propertyName: examination_version
-        mapping:
-          0_0_1: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-          0_0_2: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
       allOf:
         - $ref: "#/components/schemas/MyReport"
-        - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-        - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+        - type: object
+          required:
+            - examination_version
+          discriminator:
+            propertyName: examination_version
+            mapping:
+              AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+              BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+          properties:
+            examination_version:
+              type: string
+              example: '1.0.0'
+          allOf:
+            - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+            - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyTCReportPostOutput:
       type: object
