@@ -1017,6 +1017,7 @@ components:
 
     MyReportTearMeniscus:
       allOf:
+      - $ref: '#/components/schemas/MyReport'
       - required:
         - examination_version
       - properties:
