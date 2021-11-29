@@ -1016,21 +1016,20 @@ components:
       - "MyTearMeniscusVersion_2_0_0"
 
     MyReportTearMeniscus:
-      type: object
-      required:
+      allOf:
+      - required:
         - examination_version
-      properties:
-        examination_version:
-          $ref: '#/components/schemas/MyTearMeniscusVersion'
-      discriminator:
-        propertyName: examination_version
-        mapping:
-          MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-          MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+      - properties:
+          examination_version:
+            type: string
+      - discriminator:
+          propertyName: examination_version
+          mapping:
+            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
-      - $ref: '#/components/schemas/MyReport'
       - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
@@ -1041,7 +1040,6 @@ components:
 
     MyReportTearMeniscusV_0_0_2:
       allOf:
-      - $ref: '#/components/schemas/MyReport'
       - $ref: '#/components/schemas/MyReportTearMeniscus'
       - properties:
           image:
@@ -1053,20 +1051,20 @@ components:
             type: integer
   
     MyReport:
-      type: object
-      required:
+      allOf:
+      - required:
         - examination_type
-      properties:
-        examination_type:
-          $ref: "#/components/schemas/MyExaminationType"
-      discriminator:
-        propertyName: examination_type
-        mapping:
-          ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
-          ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
-          ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
-          ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+      - properties:
+          examination_type:
+            $ref: "#/components/schemas/MyExaminationType"
+      - discriminator:
+          propertyName: examination_type
+          mapping:
+            ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
+            ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
+            ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
+            ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
+#          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
           
 
     MyTCReportPostOutput:
