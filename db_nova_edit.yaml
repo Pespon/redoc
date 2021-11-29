@@ -1033,10 +1033,21 @@ components:
               format: binary
             score:
               type: integer
-  
-    MyReportTearMeniscus:
+
+    MyReportTearMeniscusV_0_0_1:
       allOf:
-        - $ref: "#/components/schemas/MyReport"
+        - $ref: "#/components/schemas/MyReportTearMeniscus"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
+
+    MyReportTearMeniscusV_0_0_2:
+      allOf:
+        - $ref: "#/components/schemas/MyReportTearMeniscus"
         - type: object
           properties:
             image:
@@ -1046,6 +1057,23 @@ components:
               type: integer
             tear_meniscus_size_v2:
               type: integer
+  
+    MyReportTearMeniscus:
+      type: object
+      required:
+        - examination_version
+      discriminator:
+        propertyName: examination_version
+        mapping:
+          0.0.1: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+          0.0.2: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+    
+      properties:
+        examination_version:
+          type: string
+          example: '0.0.1'
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
 
     MyTCReportPostOutput:
       type: object
