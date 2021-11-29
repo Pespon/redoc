@@ -925,6 +925,7 @@ components:
 
       
     MyReportNibut:
+      type: object
       properties:
         image:
           type: string
@@ -942,6 +943,7 @@ components:
           format: binary
 
     MyReportMeibography:
+      type: object
       properties:
         image_base:
           type: string
@@ -957,6 +959,7 @@ components:
           format: binary
   
     MyReportOsie:
+      type: object
       properties:
         image:
           type: string
@@ -965,6 +968,7 @@ components:
           type: integer
 
     MyReportAbortiveBlinking:
+      type: object
       properties:
         blink_count:
           type: integer
