@@ -324,10 +324,14 @@ paths:
                   ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
                   ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
                   ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
+                  ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
+                  ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
               allOf:
-                - $ref: '#/components/schemas/MyReportMeibography'
-                - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportNibut'
+                - $ref: '#/components/schemas/MyReportTfse'
+                - $ref: '#/components/schemas/MyReportMeibography'
+                - $ref: '#/components/schemas/MyReportOsie'
+                - $ref: '#/components/schemas/MyReportTearMeniscus'
 
         required: true
       responses:
@@ -965,6 +969,8 @@ components:
       - "ExaminationType_NIBUT"
       - "ExaminationType_TFSE"
       - "ExaminationType_Meibography"
+      - "ExaminationType_OSIE"
+      - "ExaminationType_TearMeniscus"
 
     MyReport:
       type: object
@@ -1017,6 +1023,30 @@ components:
               type: string
               format: binary
   
+    MyReportOsie:
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            score:
+              type: integer
+  
+    MyReportTearMeniscus:
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            image:
+              type: string
+              format: binary
+            tear_meniscus_size:
+              type: integer
+            tear_meniscus_size_v2:
+              type: integer
+
     MyTCReportPostOutput:
       type: object
       properties:
