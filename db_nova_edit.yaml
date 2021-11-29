@@ -923,98 +923,71 @@ components:
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
 
-    MyReportBase:
-      type: object
-      required:
-        - examination_name
-      discriminator:
-        propertyName: examination_name
-      properties:
-        examination_name:
-          $ref: "#/components/schemas/MyExaminationType"
       
     MyReportNibut:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            breakup_time_ms:
-              type: integer
+      properties:
+        image:
+          type: string
+          format: binary
+        breakup_time_ms:
+          type: integer
 
     MyReportTfse:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            score_data:
-              type: string
-              format: binary
+      properties:
+        image:
+          type: string
+          format: binary
+        score_data:
+          type: string
+          format: binary
 
     MyReportMeibography:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image_base:
-              type: string
-              format: binary
-            image_processed:
-              type: string
-              format: binary
-            image_3d:
-              type: string
-              format: binary
-            score_data:
-              type: string
-              format: binary
+      properties:
+        image_base:
+          type: string
+          format: binary
+        image_processed:
+          type: string
+          format: binary
+        image_3d:
+          type: string
+          format: binary
+        score_data:
+          type: string
+          format: binary
   
     MyReportOsie:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            score:
-              type: integer
+      properties:
+        image:
+          type: string
+          format: binary
+        score:
+          type: integer
 
     MyReportAbortiveBlinking:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            blink_count:
-              type: integer
-            abortive_blink_count:
-              type: integer
-            blink_frequency:
-              type: integer
+      properties:
+        blink_count:
+          type: integer
+        abortive_blink_count:
+          type: integer
+        blink_frequency:
+          type: integer
 
     MyReportTearMeniscus:
+      required:
+        - examination_version
+      properties:
+        examination_version:
+          type: string
+          example: '1.0.0'
+      discriminator:
+        propertyName: examination_version
+        mapping:
+          AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+          BB: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
       allOf:
-        - type: object
-          required:
-            - examination_version
-          properties:
-            examination_version:
-              type: string
-              example: '1.0.0'
-          discriminator:
-            propertyName: examination_version
-            mapping:
-              AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
-              BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
-          allOf:
-            - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
-            - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
-        - $ref: "#/components/schemas/MyReportBase"
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
 
     MyReportTearMeniscus2:
       type: object
@@ -1035,30 +1008,30 @@ components:
 
 
     MyReportTearMeniscusV_0_0_1:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            tear_meniscus_size:
-              type: integer
+      properties:
+        image:
+          type: string
+          format: binary
+        tear_meniscus_size:
+          type: integer
 
     MyReportTearMeniscusV_0_0_2:
-      allOf:
-        - $ref: "#/components/schemas/MyReportBase"
-        - type: object
-          properties:
-            image:
-              type: string
-              format: binary
-            tear_meniscus_size:
-              type: integer
-            tear_meniscus_size_v2:
-              type: integer
+      properties:
+        image:
+          type: string
+          format: binary
+        tear_meniscus_size:
+          type: integer
+        tear_meniscus_size_v2:
+          type: integer
   
     MyReport:
+      type: object
+      required:
+        - examination_name
+      properties:
+        examination_name:
+          $ref: "#/components/schemas/MyExaminationType"
       discriminator:
         propertyName: examination_name
         mapping:
