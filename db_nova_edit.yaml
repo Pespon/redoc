@@ -311,7 +311,7 @@ paths:
     post:
       tags:
         - "my report"
-      summary: "C Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      summary: "D Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
       operationId: "SOMEVAL"
       requestBody:
         description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
@@ -925,47 +925,57 @@ components:
 
       
     MyReportNibut:
-          properties:
-            image:
-              type: string
-              format: binary
-            breakup_time_ms:
-              type: integer
+      allOf:
+      - $ref: '#/components/schemas/MyReportBase'
+      - properties:
+          image:
+            type: string
+            format: binary
+          breakup_time_ms:
+            type: integer
 
     MyReportTfse:
-          properties:
-            image:
-              type: string
-              format: binary
-            score_data:
-              type: string
-              format: binary
+      allOf:
+      - $ref: '#/components/schemas/MyReportBase'
+      - properties:
+          image:
+            type: string
+            format: binary
+          score_data:
+            type: string
+            format: binary
 
     MyReportMeibography:
-          properties:
-            image_base:
-              type: string
-              format: binary
-            image_processed:
-              type: string
-              format: binary
-            image_3d:
-              type: string
-              format: binary
-            score_data:
-              type: string
+      allOf:
+      - $ref: '#/components/schemas/MyReportBase'
+      - properties:
+          image_base:
+            type: string
+            format: binary
+          image_processed:
+            type: string
+            format: binary
+          image_3d:
+            type: string
+            format: binary
+          score_data:
+            type: string
               format: binary
   
     MyReportOsie:
-          properties:
-            image:
-              type: string
-              format: binary
-            score:
-              type: integer
+      allOf:
+      - $ref: '#/components/schemas/MyReportBase'
+      - properties:
+          image:
+            type: string
+            format: binary
+          score:
+            type: integer
 
     MyReportAbortiveBlinking:
-          properties:
+      allOf:
+      - $ref: '#/components/schemas/MyReportBase'
+      - properties:
             blink_count:
               type: integer
             abortive_blink_count:
@@ -1025,13 +1035,15 @@ components:
             tear_meniscus_size_v2:
               type: integer
   
-    MyReport:
+    MyReportBase:
       type: object
       required:
         - examination_name
       properties:
         examination_name:
           $ref: "#/components/schemas/MyExaminationType"
+  
+    MyReport:
       discriminator:
         propertyName: examination_name
         mapping:
