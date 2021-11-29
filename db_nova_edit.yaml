@@ -326,7 +326,7 @@ paths:
                   ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
                   ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
                   ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
-              allOf:
+              oneOf:
                 - $ref: '#/components/schemas/MyReportNibut'
                 - $ref: '#/components/schemas/MyReportTfse'
                 - $ref: '#/components/schemas/MyReportMeibography'
