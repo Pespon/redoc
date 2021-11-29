@@ -311,7 +311,7 @@ paths:
     post:
       tags:
         - "my report"
-      summary: "LLL Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      summary: "MMM Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
       operationId: "SOMEVAL"
       requestBody:
         description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
@@ -992,19 +992,6 @@ components:
     MyReportTearMeniscus:
       allOf:
       - $ref: '#/components/schemas/MyReport'
-      - type: object
-        required:
-          - examination_version
-        properties:
-          examination_version:
-            $ref: '#/components/schemas/MyTearMeniscusVersion'
-        discriminator:
-          propertyName: examination_version
-          mapping:
-            MyTearMeniscusVersion_1_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-            MyTearMeniscusVersion_2_0_0: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-
-    MyReportTearMeniscusTest:
       required:
         - examination_version
       properties:
@@ -1051,7 +1038,7 @@ components:
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscusTest'
+          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
           
 
     MyTCReportPostOutput:
