@@ -926,7 +926,6 @@ components:
       
     MyReportNibut:
       allOf:
-        - $ref: '#/components/schemas/MyReportBase'
         - type: object
           properties:
             image:
@@ -937,7 +936,6 @@ components:
 
     MyReportTfse:
       allOf:
-        - $ref: '#/components/schemas/MyReportBase'
         - type: object
           properties:
             image:
@@ -949,7 +947,6 @@ components:
 
     MyReportMeibography:
       allOf:
-        - $ref: '#/components/schemas/MyReportBase'
         - type: object
           properties:
             image_base:
@@ -967,7 +964,6 @@ components:
   
     MyReportOsie:
       allOf:
-        - $ref: '#/components/schemas/MyReportBase'
         - type: object
           properties:
             image:
@@ -978,7 +974,6 @@ components:
 
     MyReportAbortiveBlinking:
       allOf:
-        - $ref: '#/components/schemas/MyReportBase'
         - type: object
           properties:
             blink_count:
@@ -1040,14 +1035,12 @@ components:
             tear_meniscus_size_v2:
               type: integer
   
-    MyReportBase:
+    MyReport:
       required:
         - examination_name
       properties:
         examination_name:
           $ref: "#/components/schemas/MyExaminationType"
-  
-    MyReport:
       discriminator:
         propertyName: examination_name
         mapping:
