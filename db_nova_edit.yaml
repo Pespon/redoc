@@ -1039,7 +1039,14 @@ components:
           ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
           ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
           ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus2'
+          ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+      allOf:
+        - $ref: '#/components/schemas/MyReportNibut'
+        - $ref: '#/components/schemas/MyReportTfse'
+        - $ref: '#/components/schemas/MyReportMeibography'
+        - $ref: '#/components/schemas/MyReportOsie'
+        - $ref: '#/components/schemas/MyReportTearMeniscus'
+  
 
     MyTCReportPostOutput:
       type: object
