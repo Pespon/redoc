@@ -1024,6 +1024,15 @@ components:
             score:
               type: integer
 
+    MyReportAbortiveBlinking:
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          properties:
+            blink_count:
+              type: integer
+            abortive_blink_count:
+              type: integer
 
     MyReportTearMeniscus:
       allOf:
