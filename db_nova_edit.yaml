@@ -307,37 +307,7 @@ paths:
           description: Error
           content: {}
 
-  /my_report/nibut:
-    post:
-      tags:
-        - "my report"
-      summary: "Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
-      operationId: "sendLocalPatientsReports"
-      requestBody:
-        description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
-        content:
-          'multipart/mixed':
-            schema:
-              $ref: '#/components/schemas/MyReport2'
-                    
-                  
-                  
-                    
-        required: true
-      responses:
-        200:
-          description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MyTCReportPostOutput'
-        400:
-          description: Error
-          content: {}
-
-  /my_report2:
+  /my_report:
     post:
       tags:
         - "my report"
@@ -376,24 +346,6 @@ paths:
         400:
           description: Error
           content: {}
-
-  /animals:
-    post:
-      tags:
-        - "test"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/Dog'
-                - $ref: '#/components/schemas/Cat'
-                - $ref: '#/components/schemas/Fish'
-              discriminator:
-                propertyName: animal_type
-      responses:
-        '201':
-          description: Created
       
   /tearcheck/info:
     get:
@@ -1009,100 +961,16 @@ components:
       - "PatientRecordType_Shared"
       - "PatientRecordType_Restricted"
 
-    MyNibutData:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        breakup_time_ms:
-          type: integer
-    
-    MyTfseData:
-      type: object
-      properties:
-        image:
-          type: string
-          format: binary
-        score_data:
-          type: integer
 
-    MyMeibographyData:
-      type: object
-      properties:
-        image_base:
-          type: string
-          format: binary
-        image_processed:
-          type: string
-          format: binary
-        image_3d:
-          type: string
-          format: binary
-        score_data:
-          type: integer
-  
+    MyExaminationType:
+      type: string
+      example: "ExaminationType_NIBUT"
+      enum:
+      - "ExaminationType_NIBUT"
+      - "ExaminationType_TFSE"
+      - "ExaminationType_Meibography"
 
-  
     MyReport:
-      type: object
-      properties:
-        report_info:
-          type: object
-          properties:
-            tc_id:
-              type: integer
-              example: 11
-            record_id:
-              type: integer
-              example: 11
-            creation_date:
-              type: string
-            examination_type:
-              type: string
-            report_version:
-              type: string
-              description: "This parameter combined with examination_type is used to determine the content of the multipart request"
-              example: "1.0.0"
-          required:
-            - examination_type
-      oneOf:
-        - $ref: '#/components/schemas/MyNibutData'
-        - $ref: '#/components/schemas/MyTfseData'
-        - $ref: '#/components/schemas/MyMeibographyData'
-      discriminator:
-        propertyName: examination_type
-        mapping:
-          MyNibutData: '#/components/schemas/MyNibutData'
-          MyTfseData: '#/components/schemas/MyTfseData'
-          MyMeibographyData: '#/components/schemas/MyMeibographyData'
-
-    MyReport2:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/MyNibutData'
-      properties:
-        report_info:
-          type: object
-          properties:
-            tc_id:
-              type: integer
-              example: 11
-            record_id:
-              type: integer
-              example: 11
-            creation_date:
-              type: string
-            examination_type:
-              type: string
-            report_version:
-              type: string
-              description: "This parameter combined with examination_type is used to determine the content of the multipart request"
-              example: "1.0.0"
-          required:
-            - examination_type
-  
-    MyReport3:
       type: object
       required:
         - examination_name
@@ -1114,7 +982,7 @@ components:
       
     MyReportNibut:
       allOf:
-        - $ref: "#/components/schemas/MyReport3"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image:
@@ -1125,7 +993,7 @@ components:
 
     MyReportTfse:
       allOf:
-        - $ref: "#/components/schemas/MyReport3"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image:
@@ -1137,7 +1005,7 @@ components:
 
     MyReportMeibography:
       allOf:
-        - $ref: "#/components/schemas/MyReport3"
+        - $ref: "#/components/schemas/MyReport"
         - type: object
           properties:
             image_base:
@@ -1162,14 +1030,6 @@ components:
         cloud_id:
           type: integer
           example: 12
-  
-    MyExaminationType:
-      type: string
-      example: "ExaminationType_NIBUT"
-      enum:
-      - "ExaminationType_NIBUT"
-      - "ExaminationType_TFSE"
-      - "ExaminationType_Meibography"
 
     Tearcheck:
       type: object
