@@ -332,7 +332,32 @@ paths:
                 - $ref: '#/components/schemas/MyReportMeibography'
                 - $ref: '#/components/schemas/MyReportOsie'
                 - $ref: '#/components/schemas/MyReportTearMeniscus'
+        required: true
+      responses:
+        200:
+          description: "Successful operation. The response contains the reports old id and cloud id. The Tearcheck shall update the old id of the reports."
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyTCReportPostOutput'
+        400:
+          description: Error
+          content: {}
 
+  /my_report_test:
+    post:
+      tags:
+        - "my report"
+      summary: "aa"
+      operationId: "SOMfEVAL"
+      requestBody:
+        description: "cc"
+        content:
+          'multipart/mixed':
+            schema:
+              $ref: '#/components/schemas/MyReportTearMeniscus'
         required: true
       responses:
         200:
