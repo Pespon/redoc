@@ -991,8 +991,11 @@ components:
 
     MyReportTearMeniscus:
         required:
+          - examination_type
           - examination_version
         properties:
+          examination_type:
+            $ref: "#/components/schemas/MyExaminationType"
           examination_version:
             $ref: '#/components/schemas/MyTearMeniscusVersion'
         discriminator:
