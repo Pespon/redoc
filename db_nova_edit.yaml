@@ -1068,14 +1068,14 @@ components:
             examination_version:
               type: string
               example: '1.0.0'
-        - allOf:
-          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
-          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
-          discriminator:
+        - discriminator:
             propertyName: examination_version
             mapping:
               AA: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
               BB: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
+        - allOf:
+          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_1'
+          - $ref: '#/components/schemas/MyReportTearMeniscusV_0_0_2'
 
     MyTCReportPostOutput:
       type: object
