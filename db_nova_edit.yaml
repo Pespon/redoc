@@ -1001,20 +1001,23 @@ components:
 
 
     MyReportTearMeniscus:
-      required:
-        - examination_version
-      properties:
-        examination_version:
-          type: string
-          example: '1.0.0'
-      discriminator:
-        propertyName: examination_version
-        mapping:
-          AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
-          BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
-      oneOf:
-        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
-        - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+      allOf:
+        - $ref: "#/components/schemas/MyReport"
+        - type: object
+          required:
+            - examination_version
+          properties:
+            examination_version:
+              type: string
+              example: '1.0.0'
+          discriminator:
+            propertyName: examination_version
+            mapping:
+              AA: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+              BB:  "#/components/schemas/MyReportTearMeniscusV_0_0_2"
+          allOf:
+            - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_1"
+            - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
 
     MyReportTearMeniscusV_0_0_1:
       allOf:
