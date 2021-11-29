@@ -1033,6 +1033,8 @@ components:
               type: integer
             abortive_blink_count:
               type: integer
+            blink_frequency:
+              type: integer
 
     MyReportTearMeniscus:
       allOf:
