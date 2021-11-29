@@ -922,6 +922,7 @@ components:
       - "ExaminationType_Meibography"
       - "ExaminationType_OSIE"
       - "ExaminationType_TearMeniscus"
+
       
     MyReportNibut:
       properties:
@@ -989,6 +990,7 @@ components:
         - $ref: "#/components/schemas/MyReportTearMeniscusV_0_0_2"
 
     MyReportTearMeniscus2:
+      type: object
       required:
         - examination_version
       properties:
