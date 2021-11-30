@@ -59,7 +59,7 @@ paths:
     get:
       tags:
       - 'user'
-      summary: "Retrieve users authorized in at least one the clinic authorized on this Tearcheck. If a user only have a pending authorization only the id field is send for this user."
+      summary: "Retrieve users authorized in at least one the clinic authorized on this Tearcheck. If a user only have a pending authorization only the id field is send for this user. The 'least' important personal data are not transmitted (e.g. address)"
       operationId: "getUsers"
       responses:
         200:
@@ -75,7 +75,7 @@ paths:
     get:
       tags:
       - 'user'
-      summary: "Restrieve loged-in user."
+      summary: "Restrieve loged-in user. All data included."
       operationId: "getUser"
       responses:
         200:
@@ -188,22 +188,6 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /all_user_patients:
-    get:
-      tags:
-      - 'patient'
-      summary: "Retrieves patients who have authorized the logged-in user through a clinic that is accessible via this Tearcheck."
-      operationId: "getUserAllPatient"
-      responses:
-        200:
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Patient'
-
   /new_patients:
     post:
       tags:
@@ -261,12 +245,12 @@ paths:
           description: Error
           content: {}
 
-  /all_tearcheck_patients_authorizations:
+  /all_user_patients:
     get:
       tags:
-      - 'patient authorization'
-      summary: "Retrieves all patients authorizations."
-      operationId: "getAllPatientsAuthorisationIds"
+      - 'patient'
+      summary: "Retrieves patients who have authorized the logged-in user through a clinic that is accessible via this Tearcheck."
+      operationId: "getUserAllPatient"
       responses:
         200:
           description: "Successful operation"
@@ -275,10 +259,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PatientAuthorization'
-        400:
-          description: Error
-          content: {}
+                  $ref: '#/components/schemas/PatientSmall'
 
   /new_patients_authorizations:
     post:
@@ -312,6 +293,25 @@ paths:
                           example: 11
         400:
           description: "Invalid Users"
+          content: {}
+  
+  /all_tearcheck_patients_authorizations:
+    get:
+      tags:
+      - 'patient authorization'
+      summary: "Retrieves all patients authorizations."
+      operationId: "getAllPatientsAuthorisationIds"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientAuthorization'
+        400:
+          description: Error
           content: {}
 
   /report:
@@ -577,7 +577,7 @@ components:
           type: integer
           example: 0
   
-    Patient:
+    PatientSmall:
       type: object
       properties:
         id:
@@ -592,9 +592,6 @@ components:
         email:
           type: string
           example: "Jean.dupond@dupond.com"
-        phoneNumber:
-          type: string
-          example: "0606060606"
         status:
           type: string
           description: "User Status"
@@ -605,12 +602,6 @@ components:
         birthDate:
           type: string
           example: "1980-10-10"
-        address:
-          type: string
-          example: "25 place de la mairie"
-        city:
-          type: string
-          example: "Lyon"
         createdAt:
           type: string
           format: date-time
