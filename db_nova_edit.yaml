@@ -6,12 +6,11 @@ info:
 servers:
 - url: https://eswin-extranet.staging7.novaway.net/api
 tags:
-- name: "user"
 - name: "clinic"
+- name: "user"
 - name: "clinic member"
 - name: "patient"
 - name: "patient authorization"
-- name: "patient record"
 - name: "report"
 
 paths:
@@ -19,7 +18,7 @@ paths:
     summary: "Send users created on tearcheck, retrieve their cloud id and password"
     post:
       tags:
-      - "my user"
+      - 'user'
       summary: "Send users created on offline tearcheck, retrieve their cloud id and password"
       operationId: "sendNewUser"
       requestBody:
@@ -59,7 +58,7 @@ paths:
   /all_tearcheck_users:
     get:
       tags:
-      - "my user"
+      - 'user'
       summary: "Retrieve users authorized in at least one the clinic authorized on this Tearcheck. If a user only have a pending authorization only the id field is send for this user."
       operationId: "getUsers"
       responses:
@@ -75,7 +74,7 @@ paths:
   /user:
     get:
       tags:
-      - "my user"
+      - 'user'
       summary: "Restrieve loged-in user."
       operationId: "getUser"
       responses:
@@ -87,7 +86,7 @@ paths:
                 $ref: '#/components/schemas/User'
     put:
       tags:
-      - "my user"
+      - 'user'
       summary: "Update loged-in user"
       operationId: "updateUser"
       requestBody:
@@ -109,7 +108,7 @@ paths:
   /all_tearcheck_clinics:
     get:
       tags:
-      - "my clinic"
+      - 'clinic'
       summary: "Restrieve clinics authorized on this Tearcheck."
       operationId: "getClinics"
       responses:
@@ -125,7 +124,7 @@ paths:
   /new_clinic_members:
     post:
       tags:
-      - "my clinic member"
+      - 'clinic member'
       summary: "Send clinic member created on offline tearcheck, retrieve there cloud id."
       operationId: "sendNewClinicMember"
       requestBody:
@@ -154,7 +153,7 @@ paths:
   /all_tearcheck_clinic_members:
     get:
       tags:
-      - "my clinic member"
+      - 'clinic member'
       summary: "Retrieve clinic member authorized in at least one the clinic authorized on this Tearcheck. If a clinic member only have a pending authorization only the id field is send for this user."
       operationId: getClinicMembers
       responses:
@@ -170,7 +169,7 @@ paths:
   /clinic_member:
     put:
       tags:
-      - "my clinic member"
+      - 'clinic member'
       summary: "Update clinic member. Loged in user must be authorized to perform the modification"
       operationId: "updateClinicMember"
       requestBody:
@@ -192,7 +191,7 @@ paths:
   /all_user_patients:
     get:
       tags:
-      - "my patients"
+      - 'patient'
       summary: "Retrieves patients who have authorized the logged-in user through a clinic that is accessible via this Tearcheck."
       operationId: "getUserAllPatient"
       responses:
@@ -208,7 +207,7 @@ paths:
   /new_patients:
     post:
       tags:
-      - "my patient"
+      - 'patient'
       summary: "Send patients created on tearcheck, retrieve their cloud id"
       operationId: "sendNewPatients"
       requestBody:
@@ -245,7 +244,7 @@ paths:
   /all_tearcheck_patients_ids:
     get:
       tags:
-      - "my patient"
+      - 'patient'
       summary: "Retrieves the ids of patients who authorized at least one of the authorized clinics on this Tearcheck. This should allow the Tearcheck to remove the patients it has lost access to."
       operationId: "getPatients"
       responses:
@@ -265,7 +264,7 @@ paths:
   /all_tearcheck_patients_authorizations:
     get:
       tags:
-      - "my patient authorization"
+      - 'patient authorization'
       summary: "Retrieves all patients authorizations."
       operationId: "getAllPatientsAuthorisationIds"
       responses:
@@ -284,7 +283,7 @@ paths:
   /new_patients_authorizations:
     post:
       tags:
-      - "my patient authorization"
+      - 'patient authorization'
       summary: "Send patients authorisations created on tearcheck, retrieve their cloud id."
       operationId: "sendNewPatientsAuthorizations"
       requestBody:
@@ -315,30 +314,10 @@ paths:
           description: "Invalid Users"
           content: {}
 
-  /patient_reports_idx:
-    get:
-      tags:
-      - "my patient"
-      summary: "Retrieves the ids of patients who authorized at least one of the authorized clinics on this Tearcheck. This should allow the Tearcheck to remove the patients it has lost access to."
-      operationId: "getPatientsReportsIds"
-      responses:
-        200:
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: integer
-              example: [42, 43, 44]
-        400:
-          description: Error
-          content: {}
-
-  /reports:
+  /report:
     post:
       tags:
-        - "my report"
+        - 'report'
       summary: "Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart.."
       operationId: "sendReport"
       requestBody:
@@ -369,7 +348,54 @@ paths:
           description: Error
           content: {}
 
+  /all_patient_reports_ids/{patient_id}:
+    get:
+      tags:
+        - 'report'
+      summary: "Retrieves the ids of patient reports."
+      operationId: "getPatientsReportsIds"
+      parameters:
+        - in: path
+          name: patient_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+              example: [42, 43, 44]
+        400:
+          description: Error
+          content: {}
 
+  /report/{report_id}:
+    get:
+      tags:
+        - 'report'
+      summary: "Retrieves reports"
+      operationId: "getReport"
+      parameters:
+        - in: path
+          name: report_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            'multipart/mixed':
+              schema:
+                $ref: '#/components/schemas/Report'
+        400:
+          description: Error
+          content: {}
 
 components:
   schemas:
