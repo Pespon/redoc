@@ -6,7 +6,6 @@ info:
 servers:
 - url: https://eswin-extranet.staging7.novaway.net/api
 tags:
-- name: "test"
 - name: "my user"
 - name: "my clinic"
 - name: "my clinic member"
@@ -33,7 +32,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/MyTCUserPostInput'
+                $ref: '#/components/schemas/MyUserNoPassword'
         required: true
       responses:
         200:
@@ -43,13 +42,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MyTCUserPostOutput'
+                  allOf:
+                  - type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+                      initial_id:
+                        type: integer
+                        example: 11
+                  - $ref: '#/components/schemas/MyUserMandatoryData'
+                  - $ref: '#/components/schemas/PasswordData'
+  
         400:
           description: "Invalid Users"
           content: {}
       x-codegen-request-body-name: body
 
-  /all_users:
+  /all_tearcheck_users:
     get:
       tags:
       - "my user"
@@ -99,7 +109,7 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /all_clinics:
+  /all_tearcheck_clinics:
     get:
       tags:
       - "my clinic"
@@ -114,33 +124,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MyClinic'
-
-  /clinics_patients_ids:
-    post:
-      tags:
-      - "my clinic"
-      summary: "Note: For payload reason this request is a POST instead of a GET. Retrieves the patients who authorized at least one of the clinics set in parameters."
-      operationId: "getClinicsPatients"
-      requestBody:
-        description: "Patient ids."
-        content:
-          '*/*':
-            schema:
-              type: array
-              items:
-                type: integer
-            example: [42, 43, 44]
-        required: true
-      responses:
-        200:
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MyPatient'
-      x-codegen-request-body-name: body
 
   /new_clinic_members:
     post:
@@ -171,7 +154,7 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
-  /all_clinic_members:
+  /all_tearcheck_clinic_members:
     get:
       tags:
       - "my clinic member"
@@ -209,6 +192,22 @@ paths:
           content: {}
       x-codegen-request-body-name: body
 
+  /all_user_patients:
+    get:
+      tags:
+      - "my patients"
+      summary: "Retrieves patients who have authorized the logged-in user through a clinic that is accessible via this Tearcheck."
+      operationId: "getUserAllPatient"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyPatient'
+
   /new_patients:
     post:
       tags:
@@ -232,12 +231,21 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MyTCPatientPostOutput'
+                  type: object
+                  properties:
+                    cloud_id:
+                      type: integer
+                      example: 42
+                    tc_id:
+                      type: integer
+                      example: 11
+                    status:
+                      type: integer
         400:
           description: "Invalid Users"
           content: {}
 
-  /all_patients_ids:
+  /all_tearcheck_patients_ids:
     get:
       tags:
       - "my patient"
@@ -280,66 +288,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MyTCPatientAuthorizationPostOutput'
-        400:
-          description: "Invalid Users"
-          content: {}
-
-  /my_tc_patients_records:
-    post:
-      tags:
-      - "my patient record"
-      summary: "Send patients records created on offline tearcheck, retrieve their cloud id and record_type."
-      operationId: "sendNewPatientsRecords"
-      requestBody:
-        description: "Tearcheck local patients records. The cloud shall create non-existent patients records with the provided data (2 patient record are considered equal if patient_id an clinic_id match in both record), if the record already exist no change are made."
-        content:
-          '*/*':
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MyTCPatientRecordPostInput'
-        required: true
-      responses:
-        200:
-          description: "Successful operation. The response contains the patients records old id and cloud id. The tearcheck shall update the old id of the patients records."
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MyTCPatientRecordPostOutput'
-        400:
-          description: "Invalid Users"
-          content: {}
-      x-codegen-request-body-name: body
-
-  /my_patients_records:
-    get:
-      tags:
-      - "my patient record"
-      summary: "Retrieves the ids of patients records who authorized at least one of the authorized clinics on this Tearcheck. This should allow the Tearcheck to remove the patients record it has lost access to."
-      operationId: "getPatientsRecords"
-      responses:
-        200:
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
                   type: object
-                  example: "42"
+                  properties:
+                    initial_id:
+                      description: "id sended by the tearcheck"
+                      type: integer
+                      example: 11
+                  allOf:
+                    - $ref: '#/components/schemas/MyTCPatientAuthorization'
         400:
-          description: Error
+          description: "Invalid Users"
           content: {}
 
-  /my_report:
+  /reports:
     post:
       tags:
         - "my report"
-      summary: "QQQ Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
-      operationId: "SOMEVAL"
+      summary: "Send reports created on offline tearcheck, retrieve their cloud id. This request is multipart, the first part of the request corresponds to the json described below. The other parts of the query contain the data specific to this report. I don't think swagger 2.0 fully supports the description of this kind of request so ....."
+      operationId: "sendReport"
       requestBody:
         description: "Tearcheck local reports. The cloud shall create non-existent reports with the provided data (2 reports are considered equal if creation_date, record_id and examination_type match in both report), if the report already exist no change are made. NOTE: Report collision may only happen if during the previous synchronisation the cloud created the reports but couldn''t inform the tearcheck that the opperation was successful."
         content:
@@ -592,12 +558,19 @@ paths:
 components:
   schemas:
 
-    MyTCUserPostInput:
-      type: object
+    PasswordData:
       properties:
-        tc_id:
-          type: integer
-          example: 11
+        hashed_password:
+          type: string
+          format: binary
+          example: "ds4fd57gVhs54gsJ4"
+        password_salt:
+          type: string
+          format: binary
+          example: "8hfgZ8fhY42WGj"
+
+    MyUserMandatoryData:
+      properties:
         firstName:
           type: string
           example: "Jean"
@@ -607,101 +580,39 @@ components:
         email:
           type: string
           example: "jean.dupond@dupond.com"
-        phoneNumber:
-          type: string
-          example: "0606060606"
         birthDate:
           type: string
           example: "1980-10-10"
-        address:
-          type: string
-          example: "25 place de la mairie"
-        city:
-          type: string
-          example: "Lyon"
-  
-    MyTCUserPostOutput:
-      type: object
-      properties:
-        cloud_id:
-          type: integer
-          example: 42
-        tc_id:
-          type: integer
-          example: 11
-        status:
-          type: integer
-        hashed_password:
-          type: string
-          example: "ds4fd57gVhs54gsJ4"
-        hashed_password_iv:
-          type: string
-          example: "8hfgZ8fhY42WGj"
-        firstName:
-          type: string
-          example: "Jean"
-        lastName:
-          type: string
-          example: "Dupond"
-        birthDate:
-          type: string
-          example: "1980-10-10"
-  
-    MyUser:
-      type: object
-      properties:
-        firstName:
-          type: string
-          example: "Jean"
-        lastName:
-          type: string
-          example: "Dupond"
-        email:
-          type: string
-          example: "Jean.dupond@dupond.com"
-        phoneNumber:
-          type: string
-          example: "0606060606"
-        birthDate:
-          type: string
-          example: "1980-10-10"
-        address:
-          type: string
-          example: "25 place de la mairie"
-        city:
-          type: string
-          example: "Lyon"
-        hashed_password:
-          type: string
-          example: "ds4fd57gVhs54gsJ4"
-        hashed_password_iv:
-          type: string
-          example: "8hfgZ8fhY42WGj"
   
     MyUserSmall:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 42
-        firstName:
-          type: string
-          example: "Jean"
-        lastName:
-          type: string
-          example: "Dupond"
-        email:
-          type: string
-          example: "Jean.dupond@dupond.com"
-        birthDate:
-          type: string
-          example: "1980-10-10"
-        hashed_password:
-          type: string
-          example: "ds4fd57gVhs54gsJ4"
-        hashed_password_iv:
-          type: string
-          example: "8hfgZ8fhY42WGj"
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 42
+      - $ref: '#/components/schemas/MyUserMandatoryData'
+      - $ref: '#/components/schemas/PasswordData'
+  
+    MyUserNoPassword:
+      allOf:
+      - type: object
+        properties:
+          id:
+            type: integer
+            example: 42
+          address:
+            type: string
+            example: "25 place de la mairie"
+          city:
+            type: string
+            example: "Lyon"
+      - $ref: '#/components/schemas/MyUserMandatoryData'
+  
+    MyUser:
+      allOf:
+      - $ref: '#/components/schemas/MyUserNoPassword'
+      - $ref: '#/components/schemas/PasswordData'
   
     MyClinic:
       type: object
@@ -893,18 +804,6 @@ components:
           type: string
           example: "Lyon"
   
-    MyTCPatientPostOutput:
-      type: object
-      properties:
-        cloud_id:
-          type: integer
-          example: 42
-        tc_id:
-          type: integer
-          example: 11
-        status:
-          type: integer
-  
     MyTCPatientAuthorization:
       type: object
       properties:
@@ -917,49 +816,12 @@ components:
         clinic_id:
           type: integer
           example: 11
-        clinic_member_id:
+        creator_id:
           description: "Id of the clinic member who added this authorization"
           type: integer
           example: 11
         creation_date:
           type: string
-  
-    MyTCPatientAuthorizationPostOutput:
-      type: object
-      properties:
-        initial_id:
-          description: "id sended by the tearcheck"
-          type: integer
-          example: 11
-      allOf:
-        - $ref: '#/components/schemas/MyTCPatientAuthorization'
-  
-    MyTCPatientRecordPostInput:
-      type: object
-      properties:
-        tc_id:
-          type: integer
-          example: 11
-        patient_id:
-          type: integer
-          example: 11
-        clinic_id:
-          type: integer
-          example: 11
-        record_type:
-          $ref: '#/components/schemas/MyPatientRecordType'
-  
-    MyTCPatientRecordPostOutput:
-      type: object
-      properties:
-        tc_id:
-          type: integer
-          example: 11
-        cloud_id:
-          type: integer
-          example: 11
-        record_type:
-          $ref: '#/components/schemas/MyPatientRecordType'
   
     MyPatientRecordType:
       type: string
@@ -970,13 +832,13 @@ components:
 
     MyExaminationType:
       type: string
-      example: "ExaminationType_NIBUT"
+      example: "ExaminationType_NIBUT_V_1_0_0"
       enum:
-      - "ExaminationType_NIBUT"
-      - "ExaminationType_TFSE"
-      - "ExaminationType_Meibography"
-      - "ExaminationType_OSIE"
-      - "ExaminationType_TearMeniscus"
+      - "ExaminationType_NIBUT_V_1_0_0"
+      - "ExaminationType_TFSE_V_1_0_0"
+      - "ExaminationType_Meibography_V_1_0_0"
+      - "ExaminationType_OSIE_V_1_0_0"
+      - "ExaminationType_TearMeniscus_V_1_0_0"
 
       
     MyReportNibut:
@@ -1003,19 +865,21 @@ components:
     MyReportMeibography:
       allOf:
       - $ref: '#/components/schemas/MyReport'
-      - properties:
-          image_base:
-            type: string
-            format: binary
-          image_processed:
-            type: string
-            format: binary
-          image_3d:
-            type: string
-            format: binary
-          score_data:
-            type: string
-            format: binary
+      - type: array
+        items:
+          properties:
+            image_base:
+              type: string
+              format: binary
+            image_processed:
+              type: string
+              format: binary
+            image_3d:
+              type: string
+              format: binary
+            score_data:
+              type: string
+              format: binary
   
     MyReportOsie:
       allOf:
@@ -1061,11 +925,11 @@ components:
       - discriminator:
           propertyName: examination_type
           mapping:
-            ExaminationType_NIBUT: '#/components/schemas/MyReportNibut'
-            ExaminationType_TFSE: '#/components/schemas/MyReportTfse'
-            ExaminationType_Meibography: '#/components/schemas/MyReportMeibography'
-            ExaminationType_OSIE: '#/components/schemas/MyReportOsie'
-            ExaminationType_TearMeniscus: '#/components/schemas/MyReportTearMeniscus'
+            ExaminationType_NIBUT_V_1_0_0: '#/components/schemas/MyReportNibut'
+            ExaminationType_TFSE_V_1_0_0: '#/components/schemas/MyReportTfse'
+            ExaminationType_Meibography_V_1_0_0: '#/components/schemas/MyReportMeibography'
+            ExaminationType_OSIE_V_1_0_0: '#/components/schemas/MyReportOsie'
+            ExaminationType_TearMeniscus_V_1_0_0: '#/components/schemas/MyReportTearMeniscus'
           
 
     MyTCReportPostOutput:
